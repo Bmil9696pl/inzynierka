@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 from selenium import webdriver
+from celery import shared_task
 import selenium.webdriver.common.keys
 from selenium.webdriver.support.ui import Select
 import time
@@ -7,8 +8,6 @@ from datetime import datetime, date, timedelta
 import os
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'BackEnd.settings')
-django.setup()
 
 from data.models import HistoricalData
 
@@ -29,7 +28,8 @@ def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
-def updateData():
+@shared_task
+def updateHistoricalData():
     #with open("dane_historyczne.txt", "r") as file:
     #    lines = file.readlines()
     #    if lines:

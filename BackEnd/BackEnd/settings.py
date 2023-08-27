@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'data'
+    'data',
+    'django_apscheduler'
 ]
 
 MIDDLEWARE = [
@@ -101,7 +102,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CELERY_TIMEZONE = 'Europe/Warsaw'
+#CELERY_BROKER_URL = "sqla+sqlite:///celerydb.sqlite"
+#CELERY_TIMEZONE = 'Europe/Warsaw'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
