@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "victory": "^36.6.11",
+    "victory-native": "^36.6.11"
+  }
+}

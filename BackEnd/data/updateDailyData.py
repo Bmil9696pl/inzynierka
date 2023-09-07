@@ -31,15 +31,17 @@ def updateDailyData():
         DailyData.objects.all()[0].delete()
     
     goldDriver = get_driver("https://goldenmark.com/pl/mysaver/ceny-zlota/")
-    dollarDriver = get_driver("https://www.google.com/search?client=firefox-b-d&q=kurs+dolara")
+    dollarDriver = get_driver("https://internetowykantor.pl/kurs-dolara/")
     goldDriver.find_element("xpath", '/html/body/div/main/div/div/div/div[2]/div/div[1]/div[1]/div[3]/a').click()
     goldDriver.find_element("xpath", '/html/body/div/main/div/div/div/div[2]/div/div[1]/div[1]/div[3]/ul/li[3]/a').click()
+    goldDriver.find_element("xpath", "/html/body/div/main/div/div/div/div[2]/div/div[2]/div[2]/div/a[1]").click()
+    time.sleep(10)
     element = goldDriver.find_element("xpath", "/html/body/div/main/div/div/div/div[2]/div/div[1]/div[2]/span[1]/span[2]")
     scrapedData = element.text[:-1] + "a"
     scrapedData = scrapedData.replace(" ", ";")
     scrapedData = scrapedData.replace(",", ".")
 
-    element = dollarDriver.find_element("xpath", '/html/body/div[7]/div/div[11]/div/div[2]/div[2]/div/div/div[1]/div/div/div/div/div/div/div/div/div/div[3]/div[1]/div[1]/div[2]/span[1]')
+    element = dollarDriver.find_element("xpath", '/html/body/div/div[1]/div[2]/div[3]/div[1]/div[2]/div[3]/span[2]')
     scrapedData = scrapedData + ";" + element.text.replace(",", ".")
     parts = scrapedData.strip().split(";")
     goldValue, unit, dollarRate = parts
