@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "react-native-numeric-input": "^1.9.1",
     "victory": "^36.6.11",
     "victory-native": "^36.6.11"
   }
