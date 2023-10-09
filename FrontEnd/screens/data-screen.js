@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { VictoryCandlestick, VictoryLine, VictoryChart, VictoryTheme, VictoryZoomContainer } from "victory-native";
 import * as Progress from 'react-native-progress';
 import NumericInput from 'react-native-numeric-input'
+import { RFPercentage } from "react-native-responsive-fontsize";
 
 const DataScreen = (data) => {
     const [numberOfDataPoints1, setNumberOfDataPoints1] = useState(5);
@@ -68,7 +69,7 @@ const DataScreen = (data) => {
         for(pastDataIterator = dataIterator; pastDataIterator >= 0; pastDataIterator--){
           if(numberOfIterations < nOfDataPoints){
             numberOfIterations++;
-            sum = data[pastDataIterator].close;
+            sum += data[pastDataIterator].close;
           }
         }
         returnValue.push({x: data[dataIterator].x ,y: sum/numberOfIterations});
@@ -103,9 +104,10 @@ const DataScreen = (data) => {
               }
             }}>
           <VictoryCandlestick
+          candleRatio={1.2}
           style={{
             data: {
-              stroke: "#FFFFFF"
+              stroke: "transparent"            
             }
           }}
             candleColors={{
@@ -141,8 +143,7 @@ const DataScreen = (data) => {
             <View style={styles.textContainer}>
             <Text style={{
               color: "#34D17B",
-              fontSize: 27,
-              fontWeight: 400,
+              fontSize: RFPercentage(4),
             }}>
               {Math.round((ratio + Number.EPSILON) * 100) / 100}
             </Text>
@@ -150,8 +151,7 @@ const DataScreen = (data) => {
             <View style={styles.textContainer}>
             <Text style={{
               color: "#EF4242",
-              fontSize: 27,
-              fontWeight: 400,
+              fontSize: RFPercentage(4),
             }}>
               {Math.round(((1-ratio) + Number.EPSILON) * 100) / 100}
             </Text>
@@ -160,7 +160,7 @@ const DataScreen = (data) => {
           <Progress.Bar progress={ratio} width={320} height={30} color="#34D17B" unfilledColor="#EF4242"/>
         </View>
         <View style={styles.tile}>
-          <Text style={{color: '#D1348A', fontSize: 27, fontWeight: 400}}>
+          <Text style={{color: '#D1348A', fontSize: RFPercentage(4)}}>
             MOVING AVERAGE
           </Text>
           <NumericInput 
@@ -175,7 +175,7 @@ const DataScreen = (data) => {
           />
         </View>
         <View style={styles.tile}>
-          <Text style={{color: '#42EFEF', fontSize: 27, fontWeight: 400}}>
+          <Text style={{color: '#42EFEF', fontSize: RFPercentage(4)}}>
             MOVING AVERAGE
           </Text>
           <NumericInput 
@@ -220,8 +220,7 @@ const DataScreen = (data) => {
     },
     text: {
       color: "#FFFFFF",
-      fontSize: 27,
-      fontWeight: 400
+      fontSize: RFPercentage(3.5),
     }
   });
 export default DataScreen;
