@@ -139,7 +139,11 @@ const DataScreen = (data) => {
           candleRatio={1.2}
           style={{
             data: {
+<<<<<<< HEAD
               stroke: "#FFFFFF"            
+=======
+              stroke: "transparent"            
+>>>>>>> ab7560b482a51fd7709225f24f6f71e38d06f43a
             }
           }}
             candleColors={{
@@ -174,7 +178,11 @@ const DataScreen = (data) => {
           }}>
             <View style={styles.textContainer}>
             <Text style={{
+<<<<<<< HEAD
               color: "#27D89B",
+=======
+              color: "#34D17B",
+>>>>>>> ab7560b482a51fd7709225f24f6f71e38d06f43a
               fontSize: RFPercentage(4),
             }}>
               {Math.round((ratio + Number.EPSILON) * 100) / 100}
@@ -182,7 +190,11 @@ const DataScreen = (data) => {
             </View>
             <View style={styles.textContainer}>
             <Text style={{
+<<<<<<< HEAD
               color: "#D82764",
+=======
+              color: "#EF4242",
+>>>>>>> ab7560b482a51fd7709225f24f6f71e38d06f43a
               fontSize: RFPercentage(4),
             }}>
               {Math.round(((1-ratio) + Number.EPSILON) * 100) / 100}
@@ -192,7 +204,11 @@ const DataScreen = (data) => {
           <Progress.Bar progress={ratio} width={320} height={30} color="#27D89B" unfilledColor="#D82764"/>
         </View>
         <View style={styles.tile}>
+<<<<<<< HEAD
           <Text style={{color: '#FF9FC9', fontSize: RFPercentage(4)}}>
+=======
+          <Text style={{color: '#D1348A', fontSize: RFPercentage(4)}}>
+>>>>>>> ab7560b482a51fd7709225f24f6f71e38d06f43a
             MOVING AVERAGE
           </Text>
           <View style={{alignItems: "center", flexDirection:"row"}}>
@@ -215,7 +231,11 @@ const DataScreen = (data) => {
           </View>
         </View>
         <View style={styles.tile}>
+<<<<<<< HEAD
           <Text style={{color: '#F7F5DD', fontSize: RFPercentage(4)}}>
+=======
+          <Text style={{color: '#42EFEF', fontSize: RFPercentage(4)}}>
+>>>>>>> ab7560b482a51fd7709225f24f6f71e38d06f43a
             MOVING AVERAGE
           </Text>
           <View style={{alignItems: "center", flexDirection:"row"}}>
@@ -269,12 +289,15 @@ const DataScreen = (data) => {
     text: {
       color: "#FFFFFF",
       fontSize: RFPercentage(3.5),
+<<<<<<< HEAD
     },
     hidden:{
       resizeMode: "contain",
       height: 30,
       width: 30,
       marginLeft: 50
+=======
+>>>>>>> ab7560b482a51fd7709225f24f6f71e38d06f43a
     }
   });
 export default DataScreen;
