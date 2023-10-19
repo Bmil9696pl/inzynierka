@@ -104,18 +104,53 @@ const DataScreen = (data) => {
         for(pastDataIterator = dataIterator; pastDataIterator >= 0; pastDataIterator--){
           if(numberOfIterations < nOfDataPoints){
             numberOfIterations++;
-            sum += data[pastDataIterator].close;
+            sum += (data[pastDataIterator].close + data[pastDataIterator].open + data[pastDataIterator].high + data[pastDataIterator].low)/4;
           }
         }
         returnValue.push({x: data[dataIterator].x ,y: sum/numberOfIterations});
       }
       return returnValue;
     }
+
+    function boilingersBands(nOfDataPoints, data){
+      var length = data.length; 
+      retLow = [];
+      retMean = [];
+      retHigh = [];
+      for(dataIterator = 0; dataIterator < length; dataIterator++){
+        var numberOfIterations = 0;
+        var sum = 0;
+        var standardDeviation = 0;
+        for(pastDataIterator = dataIterator; pastDataIterator >= 0; pastDataIterator--){
+          if(!(numberOfIterations < nOfDataPoints)){
+            break;
+          }
+          numberOfIterations++;
+          sum += (data[pastDataIterator].close + data[pastDataIterator].open + data[pastDataIterator].high + data[pastDataIterator].low)/4;
+          
+        }
+        mean = sum/numberOfIterations
+        numberOfIterations = 0
+        for(pastDataIterator = dataIterator; pastDataIterator >= 0; pastDataIterator--){
+          if(!(numberOfIterations < nOfDataPoints)){
+            break;
+          }
+          numberOfIterations++;
+          standardDeviation += ((data[pastDataIterator].close + data[pastDataIterator].open + data[pastDataIterator].high + data[pastDataIterator].low)/4 - mean) ** 2
+        }
+        standardDeviation = Math.sqrt(standardDeviation/numberOfIterations)
+        retLow.push({x: data[dataIterator].x , y: mean-(standardDeviation*1.5)})
+        retMean.push({x: data[dataIterator].x , y: mean})
+        retHigh.push({x: data[dataIterator].x , y: mean+(standardDeviation*1.5)})
+      }
+      return {retLow, retMean, retHigh};
+    }
   
     let positiveSum = 0
     let sum = 0
     candleStickData.forEach(setRatio)
     let ratio = positiveSum/sum
+    let {retLow, retMean, retHigh} = boilingersBands(10, candleStickData)
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.tile}>
@@ -160,6 +195,27 @@ const DataScreen = (data) => {
               parent: { border: "1px solid #ccc"}
             }}
             data={dataMA2}
+          />
+          <VictoryLine 
+            style={{
+              data: { stroke: "#C73848" },
+              parent: { border: "1px solid #ccc"}
+            }}
+            data={retLow}
+          />
+          <VictoryLine 
+            style={{
+              data: { stroke: "#C76F38" },
+              parent: { border: "1px solid #ccc"}
+            }}
+            data={retMean}
+          />
+          <VictoryLine 
+            style={{
+              data: { stroke: "#C73848" },
+              parent: { border: "1px solid #ccc"}
+            }}
+            data={retHigh}
           />
           </VictoryChart>
         </View>
