@@ -9,12 +9,18 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 const DataScreen = (data) => {
     const [numberOfDataPoints1, setNumberOfDataPoints1] = useState(5);
     const [numberOfDataPoints2, setNumberOfDataPoints2] = useState(10);
+    const [boilingersNumberOfDataPoints, setBoilinersBandsNumberOfDataPoints] = useState(15)
     const [movAverage1Hidden, setMovingAverage1Hidden] = useState(true);
     const [movAverage2Hidden, setMovingAverage2Hidden] = useState(true);
+    const [boilingersBandsHidden,  setBoilingersBandsHidden] = useState(true);
     const [dataMA1, setDataMA1] = useState(null);
     const [dataMA2, setDataMA2] = useState(null);
+    const [dataBBLow, setDataBBLow] = useState(null);
+    const [dataBBMean, setDataBBMean] = useState(null);
+    const [dataBBHigh, setDataBBHigh] = useState(null);
     const firstUpdate1 = useRef(true);
     const firstUpdate2 = useRef(true);
+    const bBandsFirstUpdate = useRef(true);
     const candleStickData = []
 
     useEffect(()=>{
@@ -33,6 +39,17 @@ const DataScreen = (data) => {
       setDataMA2(simpleMovingAverage(numberOfDataPoints2, candleStickData))
     }, [numberOfDataPoints2])
 
+    useEffect(()=>{
+      if (bBandsFirstUpdate.current) {
+        bBandsFirstUpdate.current = false;
+        return;
+      }
+      let {retLow, retMean, retHigh} = boilingersBands(boilingersNumberOfDataPoints, candleStickData)
+      setDataBBLow(retLow);
+      setDataBBMean(retMean);
+      setDataBBHigh(retHigh);
+    }, [boilingersNumberOfDataPoints])
+
     function customSetMovingAverage1Hidden(){
       setMovingAverage1Hidden(!movAverage1Hidden)
       if(dataMA1 == null){
@@ -44,6 +61,16 @@ const DataScreen = (data) => {
       setMovingAverage2Hidden(!movAverage2Hidden)
       if(dataMA2 == null){
         setDataMA2(simpleMovingAverage(numberOfDataPoints2, candleStickData))
+      }
+    }
+
+    function customSetBoilingersBands2Hidden(){
+      setBoilingersBandsHidden(!boilingersBandsHidden)
+      if(dataBBLow == null){
+        let {retLow, retMean, retHigh} = boilingersBands(boilingersNumberOfDataPoints, candleStickData)
+        setDataBBLow(retLow);
+        setDataBBMean(retMean);
+        setDataBBHigh(retHigh);
       }
     }
 
@@ -62,16 +89,6 @@ const DataScreen = (data) => {
         candleStickData.push(pom)
     }
     
-
-
-    function generateRandomStockData() {
-      const open = Math.random() * 100;
-      const close = open + (Math.random() - 0.5) * 30;
-      const high = Math.max(open, close) + Math.random() * 5;
-      const low = Math.min(open, close) - Math.random() * 5;
-  
-      return { open, close, high, low };
-    }
   
   // Generate an array with 100 data points
     /*const sampleDataDates = [];
@@ -139,9 +156,9 @@ const DataScreen = (data) => {
           standardDeviation += ((data[pastDataIterator].close + data[pastDataIterator].open + data[pastDataIterator].high + data[pastDataIterator].low)/4 - mean) ** 2
         }
         standardDeviation = Math.sqrt(standardDeviation/numberOfIterations)
-        retLow.push({x: data[dataIterator].x , y: mean-(standardDeviation*1.5)})
+        retLow.push({x: data[dataIterator].x , y: mean-(standardDeviation*2)})
         retMean.push({x: data[dataIterator].x , y: mean})
-        retHigh.push({x: data[dataIterator].x , y: mean+(standardDeviation*1.5)})
+        retHigh.push({x: data[dataIterator].x , y: mean+(standardDeviation*2)})
       }
       return {retLow, retMean, retHigh};
     }
@@ -198,24 +215,24 @@ const DataScreen = (data) => {
           />
           <VictoryLine 
             style={{
-              data: { stroke: "#C73848" },
+              data: { stroke: boilingersBandsHidden ? "transparent" : "#C73848" },
               parent: { border: "1px solid #ccc"}
             }}
-            data={retLow}
+            data={dataBBLow}
           />
           <VictoryLine 
             style={{
-              data: { stroke: "#C76F38" },
+              data: { stroke: boilingersBandsHidden ? "transparent" : "#C76F38" },
               parent: { border: "1px solid #ccc"}
             }}
-            data={retMean}
+            data={dataBBMean}
           />
           <VictoryLine 
             style={{
-              data: { stroke: "#C73848" },
+              data: { stroke: boilingersBandsHidden ? "transparent" : "#C73848" },
               parent: { border: "1px solid #ccc"}
             }}
-            data={retHigh}
+            data={dataBBHigh}
           />
           </VictoryChart>
         </View>
@@ -286,6 +303,30 @@ const DataScreen = (data) => {
               borderColor='#3D3D3D'
             />
             <TouchableOpacity onPress={customSetMovingAverage2Hidden}>
+              <Image
+                style={styles.hidden}
+                source={require("../assets/img/3994371_eye_hidden_hide_invisible_private_icon.png")}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.tile}>
+          <Text style={{color: '#C76F38', fontSize: RFPercentage(4)}}>
+            BOILINGERS BANDS
+          </Text>
+          <View style={{alignItems: "center", flexDirection:"row"}}>
+            <NumericInput 
+              value={boilingersNumberOfDataPoints}
+              onChange={setBoilinersBandsNumberOfDataPoints}
+              minValue={1}
+              step={1}
+              textColor='#FFFFFF' 
+              rightButtonBackgroundColor='#27D89B'
+              leftButtonBackgroundColor='#D82764'
+              rounded='true'
+              borderColor='#3D3D3D'
+            />
+            <TouchableOpacity onPress={customSetBoilingersBands2Hidden}>
               <Image
                 style={styles.hidden}
                 source={require("../assets/img/3994371_eye_hidden_hide_invisible_private_icon.png")}
