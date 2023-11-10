@@ -20,10 +20,9 @@ const DataScreen = (data) => {
     const [dataBBHigh, setDataBBHigh] = useState(null);
     const firstUpdate1 = useRef(true);
     const firstUpdate2 = useRef(true);
-    const bBandsFirstUpdate = useRef(true);
     const candleStickData = []
 
-    useEffect(()=>{
+    /*useEffect(()=>{
       if (firstUpdate1.current) {
         firstUpdate1.current = false;
         return;
@@ -48,7 +47,7 @@ const DataScreen = (data) => {
       setDataBBLow(retLow);
       setDataBBMean(retMean);
       setDataBBHigh(retHigh);
-    }, [boilingersNumberOfDataPoints])
+    }, [boilingersNumberOfDataPoints])*/
 
     function customSetMovingAverage1Hidden(){
       setMovingAverage1Hidden(!movAverage1Hidden)
@@ -88,23 +87,34 @@ const DataScreen = (data) => {
         let pom = {x, open, close, high, low}
         candleStickData.push(pom)
     }
+    const[prevBBNumberOfDataPoints, setPrevBBNumberOfDataPoints] = useState(boilingersNumberOfDataPoints)
+    if(boilingersBandsHidden == false){
+      if(boilingersNumberOfDataPoints != prevBBNumberOfDataPoints){
+        setPrevBBNumberOfDataPoints(boilingersNumberOfDataPoints)
+        let {retLow, retMean, retHigh} = boilingersBands(boilingersNumberOfDataPoints, candleStickData)
+        setDataBBLow(retLow);
+        setDataBBMean(retMean);
+        setDataBBHigh(retHigh);
+      }
+    }
+
+    const[prevNumberOfDataPoints1, setPrevNumberOfDataPoints1] = useState(numberOfDataPoints1)
+    if(movAverage1Hidden == false){
+      if(numberOfDataPoints1 != prevNumberOfDataPoints1){
+        setPrevNumberOfDataPoints1(numberOfDataPoints1)
+        setDataMA1(simpleMovingAverage(numberOfDataPoints1, candleStickData))
+      }
+    }
+
+    const[prevNumberOfDataPoints2, setPrevNumberOfDataPoints2] = useState(numberOfDataPoints2)
+    if(movAverage2Hidden == false){
+      if(numberOfDataPoints2 != prevNumberOfDataPoints2){
+        setPrevNumberOfDataPoints2(numberOfDataPoints2)
+        setDataMA2(simpleMovingAverage(numberOfDataPoints2, candleStickData))
+      }
+    }
     
   
-  // Generate an array with 100 data points
-    /*const sampleDataDates = [];
-    const startDate = new Date(2016, 6, 1, 16, 0); // July 1, 2016, 16:00
-    const incrementMinutes = 5;
-  
-    for (let i = 0; i < 25; i++) {
-        const currentDate = new Date(startDate);
-        currentDate.setMinutes(startDate.getMinutes() + i * incrementMinutes);
-        const stockData = generateRandomStockData();
-        sampleDataDates.push({ x: currentDate, ...stockData });
-    }
-   
-    // Output the resulting array
-    console.log(sampleDataDates);
-  */
     function setRatio(data){
       if(data.open < data.close){
         positiveSum += data.close - data.open
@@ -167,7 +177,7 @@ const DataScreen = (data) => {
     let sum = 0
     candleStickData.forEach(setRatio)
     let ratio = positiveSum/sum
-    let {retLow, retMean, retHigh} = boilingersBands(10, candleStickData)
+    //let {retLow, retMean, retHigh} = boilingersBands(10, candleStickData)
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.tile}>
