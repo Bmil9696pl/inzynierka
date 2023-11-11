@@ -22,33 +22,6 @@ const DataScreen = (data) => {
     const firstUpdate2 = useRef(true);
     const candleStickData = []
 
-    /*useEffect(()=>{
-      if (firstUpdate1.current) {
-        firstUpdate1.current = false;
-        return;
-      }
-      setDataMA1(simpleMovingAverage(numberOfDataPoints1, candleStickData))
-    }, [numberOfDataPoints1])
-
-    useEffect(()=>{
-      if (firstUpdate2.current) {
-        firstUpdate2.current = false;
-        return;
-      }
-      setDataMA2(simpleMovingAverage(numberOfDataPoints2, candleStickData))
-    }, [numberOfDataPoints2])
-
-    useEffect(()=>{
-      if (bBandsFirstUpdate.current) {
-        bBandsFirstUpdate.current = false;
-        return;
-      }
-      let {retLow, retMean, retHigh} = boilingersBands(boilingersNumberOfDataPoints, candleStickData)
-      setDataBBLow(retLow);
-      setDataBBMean(retMean);
-      setDataBBHigh(retHigh);
-    }, [boilingersNumberOfDataPoints])*/
-
     function customSetMovingAverage1Hidden(){
       setMovingAverage1Hidden(!movAverage1Hidden)
       if(dataMA1 == null){
@@ -181,7 +154,13 @@ const DataScreen = (data) => {
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.tile}>
-          <VictoryChart width={400} containerComponent={<VictoryZoomContainer zoomDomain={{x: [candleStickData[0].x, candleStickData[candleStickData.length - 1].x], y: [candleStickData[0].low, candleStickData[candleStickData.length - 1].high]}}/>} domainPadding={{ x: 0 }} theme={{
+          <Text style={{color: '#FFFFFF', fontSize: RFPercentage(4), alignSelf: "flex-start"}}>
+            Current value: {candleStickData[candleStickData.length -1].close}
+          </Text>
+          <VictoryChart width={400} containerComponent={<VictoryZoomContainer zoomDomain={{x: [candleStickData[0].x, candleStickData[candleStickData.length - 1].x], y: [candleStickData[0].low, candleStickData[candleStickData.length - 1].high]}}/>} domainPadding={{ x: 0 }} 
+          padding={{ top: 20, bottom: 20, left:50, right: 20 }}
+          scale={{x: "time", y: "linear"}}
+          theme={{
               axis: {
                 style: {
                   axis: {
@@ -356,10 +335,11 @@ const DataScreen = (data) => {
       padding: 10,
     },
     container: {
-      flex: 1,
+      flexGrow: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "#1E1E1E"
+      backgroundColor: "#1E1E1E",
+      
     },
     tile: {
       alignItems: 'center',

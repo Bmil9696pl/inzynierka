@@ -4,7 +4,7 @@ from django.urls import path, include
 
 router = routers.DefaultRouter()
 router.register(r'DailyData', DailyDataViewSet)
-router.register(r'HistoricalData', HistoricalDataViewSet)
+router.register(r'HistoricalData', HistoricalDataViewSet, basename="HistoricalData")
 
 urlpatterns = [
     path('', include(router.urls))
