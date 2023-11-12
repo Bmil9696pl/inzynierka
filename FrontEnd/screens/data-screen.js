@@ -148,11 +148,12 @@ const DataScreen = (data) => {
   
     let positiveSum = 0
     let sum = 0
-    candleStickData.forEach(setRatio)
+    RSICalcValues = candleStickData.slice(-numberOfDataPoints1)
+    RSICalcValues.forEach(setRatio)
     let ratio = positiveSum/sum
     //let {retLow, retMean, retHigh} = boilingersBands(10, candleStickData)
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.container}>
         <View style={styles.tile}>
           <Text style={{color: '#FFFFFF', fontSize: RFPercentage(4), alignSelf: "flex-start"}}>
             Current value: {candleStickData[candleStickData.length -1].close}
@@ -323,7 +324,7 @@ const DataScreen = (data) => {
             </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
+      </View>
     );
   }
   
