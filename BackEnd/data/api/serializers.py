@@ -9,4 +9,4 @@ class DailyDataSerializer(serializers.ModelSerializer):
 class HistoricalDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = HistoricalData
-        fields = ('date', 'value', 'unit')
+        fields = ('date', 'goldValue', 'unit')

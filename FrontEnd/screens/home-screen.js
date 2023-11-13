@@ -5,21 +5,46 @@ import Collapsible from 'react-native-collapsible';
 import { RFPercentage } from "react-native-responsive-fontsize";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import DatePicker from "../components/date-picker";
 
 
 
 const HomeScreen = () => {
 
     const [dataFromApi, setData] = useState();
-    const [disabled, setDisabled] = useState(false);
-    const [date, setDate] = useState(new Date(2015, 1, 1));
-    console.log(date)
+    const [requestType, setRequestType] = useState("daily")
+    const [visible1, setVisible1] = useState(false);
+    const [visible2, setVisible2] = useState(false);
+    const [date1, setDate1] = useState(new Date(2023, 1, 28));
+    const [date2, setDate2] = useState(new Date(2023, 7, 27));
 
-    const customSetDate = (event, date) => {
-      setDate(date)
+    const setRequestTypeDaily = () => {
+      setRequestType("daily")
     }
 
-    const [sidebarOpen, setSideBarOpen] = useState(false);
+    const setRequestTypeHistorical = () => {
+      setRequestType("historical")
+    }
+
+    const customSetDate1 = (event, date) => {
+      setDate1(date)
+      setVisible1(false)
+    }
+
+    const handleDatePicker1 = () => {
+      setVisible1(true)
+    };
+
+    const customSetDate2 = (event, date) => {
+      setDate2(date)
+      setVisible2(false)
+    }
+
+    const handleDatePicker2 = () => {
+      setVisible2(true)
+    };
+
+    const [sidebarOpen, setSideBarOpen] = useState(true);
     const handleViewSidebar = () => {
       setSideBarOpen(!sidebarOpen);
     };
@@ -28,21 +53,27 @@ const HomeScreen = () => {
     //2023-08-28
   
     const fetchData = async() =>{
-      const response = await fetch('http://192.168.124.186:8000/api/DailyData/')
-      const data = await response.json()
-      setData(data)
+      if(requestType == "daily"){
+        const response = await fetch('http://192.168.124.186:8000/api/DailyData/')
+        const data = await response.json()
+        setData(data)
+      } else if(requestType == "historical"){
+        const response = await fetch('http://192.168.124.186:8000/api/HistoricalData/?start_date='+ date1.getUTCFullYear() +'-'+ (date1.getUTCMonth()+1) +'-'+date1.getUTCDate()+'&end_date='+ date2.getUTCFullYear() +'-'+ (date2.getUTCMonth()+1) +'-'+date2.getUTCDate())
+        const data = await response.json()
+        setData(data)
+      }
     }
   
     useEffect(() => {
        fetchData()
-    }, []);
+    }, [requestType]);
 
-    
+  
   
     if(dataFromApi){
     return(
       <View style={styles.container}>
-        <View style={{marginTop: 20}}>
+        <View style={{marginTop: (Platform.OS === 'ios')? 50 : 20}}>
           <TouchableOpacity onPress={handleViewSidebar}>
             <Image
               style={styles.hidden}
@@ -54,34 +85,44 @@ const HomeScreen = () => {
               <Text style={styles.text}>
                 Choose:
               </Text>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity style={styles.button} onPress={setRequestTypeDaily}>
                 <Text style={styles.text}>
                   Last 24 hours
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity style={styles.button} onPress={setRequestTypeHistorical}>
                 <Text style={styles.text}>
                   Historical data
                 </Text>
               </TouchableOpacity>
-              {disabled && (
-                <DateTimePicker 
-              
-              mode="date" 
-              display="spinner"
-              value={date}
-              onChange={customSetDate}
-              
-              minimumDate={new Date(2015, 1, 1)}
-              maximumDate={new Date(2023, 18, 28)}
-              disabled={disabled}
-              >
-              </DateTimePicker>
-                )}
+              <Text style={{
+                color: "#FFFFFF",
+                fontSize: RFPercentage(2.5),
+                }}>
+                From:
+              </Text>
+              <DatePicker
+              visible = {visible1}
+              date = {date1}
+              customSetDate = {customSetDate1}
+              handleDatePicker = {handleDatePicker1}
+              />
+              <Text style={{
+                color: "#FFFFFF",
+                fontSize: RFPercentage(2.5),
+                }}>
+                To:
+              </Text>
+              <DatePicker
+              visible = {visible2}
+              date = {date2}
+              customSetDate = {customSetDate2}
+              handleDatePicker = {handleDatePicker2}
+              />
               
             </View>
           </Collapsible>
-          <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 60}}>
+          <ScrollView contentContainerStyle={{flexGrow: 1}}>
             <DataScreen data = {dataFromApi}/>
           </ScrollView>
         </View>

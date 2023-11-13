@@ -18,9 +18,8 @@ const DataScreen = (data) => {
     const [dataBBLow, setDataBBLow] = useState(null);
     const [dataBBMean, setDataBBMean] = useState(null);
     const [dataBBHigh, setDataBBHigh] = useState(null);
-    const firstUpdate1 = useRef(true);
-    const firstUpdate2 = useRef(true);
     const candleStickData = []
+
 
     function customSetMovingAverage1Hidden(){
       setMovingAverage1Hidden(!movAverage1Hidden)
@@ -47,18 +46,18 @@ const DataScreen = (data) => {
     }
 
 
-    for(let i = 0 ; i<data["data"].length; i+=4){
-        var first = data["data"][i];
-        var second= data["data"][i+1];  
-        var third = data["data"][i+2];
-        var fourth = data["data"][i+2];
-        const x = new Date(first.date)
-        const open = first.goldValue
-        const close = fourth.goldValue
-        const high = Math.max(first.goldValue, second.goldValue, third.goldValue, fourth.goldValue)
-        const low = Math.min(first.goldValue, second.goldValue, third.goldValue, fourth.goldValue)
-        let pom = {x, open, close, high, low}
-        candleStickData.push(pom)
+    for(let i = 0 ; i<data["data"].length - 3; i+=4){
+      var first = data["data"][i];
+      var second= data["data"][i+1];  
+      var third = data["data"][i+2];
+      var fourth = data["data"][i+2];
+      const x = new Date(first.date)
+      const open = first.goldValue
+      const close = fourth.goldValue
+      const high = Math.max(first.goldValue, second.goldValue, third.goldValue, fourth.goldValue)
+      const low = Math.min(first.goldValue, second.goldValue, third.goldValue, fourth.goldValue)
+      let pom = {x, open, close, high, low}
+      candleStickData.push(pom)
     }
     const[prevBBNumberOfDataPoints, setPrevBBNumberOfDataPoints] = useState(boilingersNumberOfDataPoints)
     if(boilingersBandsHidden == false){
@@ -145,13 +144,30 @@ const DataScreen = (data) => {
       }
       return {retLow, retMean, retHigh};
     }
-  
+    const[wasDataChanged, setWasDataChanged] = useState(candleStickData[candleStickData.length -1].close)
+    if(wasDataChanged != candleStickData[candleStickData.length -1].close){
+      setNumberOfDataPoints1(5);
+      setNumberOfDataPoints2(10);
+      setBoilinersBandsNumberOfDataPoints(15)
+      setMovingAverage1Hidden(true);
+      setMovingAverage2Hidden(true);
+      setBoilingersBandsHidden(true);
+      setDataMA1(null);
+      setDataMA2(null);
+      setDataBBLow(null);
+      setDataBBMean(null);
+      setDataBBHigh(null);
+
+      setWasDataChanged(candleStickData[candleStickData.length -1].close)
+    }
+
     let positiveSum = 0
     let sum = 0
     RSICalcValues = candleStickData.slice(-numberOfDataPoints1)
     RSICalcValues.forEach(setRatio)
     let ratio = positiveSum/sum
     //let {retLow, retMean, retHigh} = boilingersBands(10, candleStickData)
+
     return (
       <View style={styles.container}>
         <View style={styles.tile}>
