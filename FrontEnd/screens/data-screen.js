@@ -10,6 +10,7 @@ const DataScreen = (data) => {
     const [numberOfDataPoints1, setNumberOfDataPoints1] = useState(5);
     const [numberOfDataPoints2, setNumberOfDataPoints2] = useState(10);
     const [boilingersNumberOfDataPoints, setBoilinersBandsNumberOfDataPoints] = useState(15)
+    const [boilingersBandsDeviationMultiplier, setBolilingersBandsDeviationMultiplier] = useState(1.5)
     const [movAverage1Hidden, setMovingAverage1Hidden] = useState(true);
     const [movAverage2Hidden, setMovingAverage2Hidden] = useState(true);
     const [boilingersBandsHidden,  setBoilingersBandsHidden] = useState(true);
@@ -38,7 +39,7 @@ const DataScreen = (data) => {
     function customSetBoilingersBands2Hidden(){
       setBoilingersBandsHidden(!boilingersBandsHidden)
       if(dataBBLow == null){
-        let {retLow, retMean, retHigh} = boilingersBands(boilingersNumberOfDataPoints, candleStickData)
+        let {retLow, retMean, retHigh} = boilingersBands(boilingersNumberOfDataPoints, candleStickData, boilingersBandsDeviationMultiplier)
         setDataBBLow(retLow);
         setDataBBMean(retMean);
         setDataBBHigh(retHigh);
@@ -60,10 +61,12 @@ const DataScreen = (data) => {
       candleStickData.push(pom)
     }
     const[prevBBNumberOfDataPoints, setPrevBBNumberOfDataPoints] = useState(boilingersNumberOfDataPoints)
+    const[prevBBDevMult, setPrevBBDevMult] = useState(boilingersBandsDeviationMultiplier)
     if(boilingersBandsHidden == false){
-      if(boilingersNumberOfDataPoints != prevBBNumberOfDataPoints){
+      if(boilingersNumberOfDataPoints != prevBBNumberOfDataPoints || boilingersBandsDeviationMultiplier != prevBBDevMult){
         setPrevBBNumberOfDataPoints(boilingersNumberOfDataPoints)
-        let {retLow, retMean, retHigh} = boilingersBands(boilingersNumberOfDataPoints, candleStickData)
+        setPrevBBDevMult(boilingersBandsDeviationMultiplier)
+        let {retLow, retMean, retHigh} = boilingersBands(boilingersNumberOfDataPoints, candleStickData, boilingersBandsDeviationMultiplier)
         setDataBBLow(retLow);
         setDataBBMean(retMean);
         setDataBBHigh(retHigh);
@@ -111,7 +114,7 @@ const DataScreen = (data) => {
       return returnValue;
     }
 
-    function boilingersBands(nOfDataPoints, data){
+    function boilingersBands(nOfDataPoints, data, deviationMultiplier){
       var length = data.length; 
       retLow = [];
       retMean = [];
@@ -138,9 +141,9 @@ const DataScreen = (data) => {
           standardDeviation += ((data[pastDataIterator].close + data[pastDataIterator].open + data[pastDataIterator].high + data[pastDataIterator].low)/4 - mean) ** 2
         }
         standardDeviation = Math.sqrt(standardDeviation/numberOfIterations)
-        retLow.push({x: data[dataIterator].x , y: mean-(standardDeviation*2)})
+        retLow.push({x: data[dataIterator].x , y: mean-(standardDeviation*deviationMultiplier)})
         retMean.push({x: data[dataIterator].x , y: mean})
-        retHigh.push({x: data[dataIterator].x , y: mean+(standardDeviation*2)})
+        retHigh.push({x: data[dataIterator].x , y: mean+(standardDeviation*deviationMultiplier)})
       }
       return {retLow, retMean, retHigh};
     }
@@ -149,6 +152,7 @@ const DataScreen = (data) => {
       setNumberOfDataPoints1(5);
       setNumberOfDataPoints2(10);
       setBoilinersBandsNumberOfDataPoints(15)
+      setBolilingersBandsDeviationMultiplier(1.5)
       setMovingAverage1Hidden(true);
       setMovingAverage2Hidden(true);
       setBoilingersBandsHidden(true);
@@ -329,6 +333,18 @@ const DataScreen = (data) => {
               textColor='#FFFFFF' 
               rightButtonBackgroundColor='#27D89B'
               leftButtonBackgroundColor='#D82764'
+              rounded='true'
+              borderColor='#3D3D3D'
+            />
+            <NumericInput 
+              value={boilingersBandsDeviationMultiplier}
+              onChange={setBolilingersBandsDeviationMultiplier}
+              minValue={1}
+              step={0.1}
+              textColor='#FFFFFF' 
+              rightButtonBackgroundColor='#27D89B'
+              leftButtonBackgroundColor='#D82764'
+              valueType='real'
               rounded='true'
               borderColor='#3D3D3D'
             />
