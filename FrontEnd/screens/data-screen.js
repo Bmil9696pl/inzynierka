@@ -93,8 +93,10 @@ const DataScreen = (data) => {
     function setRatio(data){
       if(data.open < data.close){
         positiveSum += data.close - data.open
+        nOfPositive += 1
+      } else {
+        negativeSum += data.open - data.close
       }
-      sum += Math.abs(data.open - data.close)
     }
   
     function simpleMovingAverage(nOfDataPoints, data){
@@ -166,10 +168,13 @@ const DataScreen = (data) => {
     }
 
     let positiveSum = 0
-    let sum = 0
+    let nOfPositive = 0
+    let negativeSum = 0
     RSICalcValues = candleStickData.slice(-numberOfDataPoints1)
     RSICalcValues.forEach(setRatio)
-    let ratio = positiveSum/sum
+    positiveSum = positiveSum/nOfPositive
+    negativeSum = negativeSum/(numberOfDataPoints1 - nOfPositive)
+    let ratio = (100 - 100/(1+(positiveSum/negativeSum)))/100
     //let {retLow, retMean, retHigh} = boilingersBands(10, candleStickData)
 
     return (
