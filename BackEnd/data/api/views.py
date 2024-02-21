@@ -13,10 +13,10 @@ class HistoricalDataViewSet(viewsets.ModelViewSet):
     serializer_class = HistoricalDataSerializer
 
     def list(self, request):
-        start_date = request.query_params.get('start_date')
-        end_date = request.query_params.get('end_date')
+        start_date = request.query_params.get('start_date') # wyłuskanie daty początkowej przedziału czasowego
+        end_date = request.query_params.get('end_date') # wyłuskanie daty końcowej przedziału czasowego
 
-        queryset = HistoricalData.objects.filter(date__range=[start_date, end_date])
+        queryset = HistoricalData.objects.filter(date__range=[start_date, end_date]) # przefiltrowanie danych wedle podanego przedziału
 
         serializer = HistoricalDataSerializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data) # wysładnie danych odczytanych z serializera

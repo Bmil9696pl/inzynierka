@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('data.api.urls')),
+    path('api/', include('data.api.urls')) # dodana ścieżka api prowadząca do ViewSetów w pliu data/api/urls
 ]

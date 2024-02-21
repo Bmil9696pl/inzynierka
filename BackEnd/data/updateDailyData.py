@@ -12,13 +12,13 @@ from data.models import DailyData
 
 def get_driver(url):
     options = webdriver.ChromeOptions()
-    options.add_argument("headless")
+    options.add_argument("headless") # uruchomienie przeglądarki bez interfejsu
     options.add_argument("disable-infobars")
     options.add_argument("start-maximized")
     options.add_argument("disable-dev-shm-usage")
     options.add_argument("no-sandbox")
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    options.add_argument("disable-blink-features=AutomationControlled")
+    options.add_argument("disable-blink-features=AutomationControlled") # zapobiega rozpoznaniu drivera jako scrappera
     driver = webdriver.Chrome(options=options)
     #driver.get("https://goldenmark.com/pl/mysaver/ceny-zlota/")
     driver.get(url)
@@ -45,6 +45,6 @@ def updateDailyData():
     scrapedData = scrapedData + ";" + element.text.replace(",", ".")
     parts = scrapedData.strip().split(";")
     goldValue, unit, dollarRate = parts
-    print("dupa sraka es")
+    
     data = DailyData(date = datetime.now(), goldValue = goldValue, unit = unit, dollarRate = dollarRate)
     data.save()

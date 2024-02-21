@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { VictoryCandlestick, VictoryLine, VictoryChart, VictoryTheme, VictoryZoomContainer } from "victory-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { VictoryCandlestick, VictoryLine, VictoryChart, VictoryZoomContainer } from "victory-native";
 import * as Progress from 'react-native-progress';
 import NumericInput from 'react-native-numeric-input'
 import { RFPercentage } from "react-native-responsive-fontsize";
@@ -175,7 +174,6 @@ const DataScreen = (data) => {
     positiveSum = positiveSum/nOfPositive
     negativeSum = negativeSum/(numberOfDataPoints1 - nOfPositive)
     let ratio = (100 - 100/(1+(positiveSum/negativeSum)))/100
-    //let {retLow, retMean, retHigh} = boilingersBands(10, candleStickData)
 
     return (
       <View style={styles.container}>

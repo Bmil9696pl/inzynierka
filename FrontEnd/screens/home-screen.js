@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {TouchableOpacity, Text, View, Image, StyleSheet, ScrollView} from "react-native"
+import {TouchableOpacity, Text, View, Image, StyleSheet, ScrollView, StatusBar} from "react-native"
 import DataScreen from "./data-screen";
 import Collapsible from 'react-native-collapsible';
 import { RFPercentage } from "react-native-responsive-fontsize";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import RNDateTimePicker from "@react-native-community/datetimepicker";
 import DatePicker from "../components/date-picker";
 
 
@@ -48,9 +46,6 @@ const HomeScreen = () => {
     const handleViewSidebar = () => {
       setSideBarOpen(!sidebarOpen);
     };
-
-    //2015-01-01
-    //2023-08-28
   
     const fetchData = async() =>{
       if(requestType == "daily"){
@@ -73,11 +68,14 @@ const HomeScreen = () => {
     if(dataFromApi){
     return(
       <View style={styles.container}>
-        <View style={{marginTop: (Platform.OS === 'ios')? 50 : 20}}>
+        <StatusBar 
+        barStyle = 'light-content'
+        />
+        <View style={{marginTop: (Platform.OS === 'ios')? 50 : 0}}>
           <TouchableOpacity onPress={handleViewSidebar}>
             <Image
               style={styles.hidden}
-              source={require("../assets/img/3994371_eye_hidden_hide_invisible_private_icon.png")}
+              source={require("../assets/img/5141110331641180048-512.png")}
             />
           </TouchableOpacity>
           <Collapsible collapsed={sidebarOpen}>
